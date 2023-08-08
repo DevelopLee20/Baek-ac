@@ -1,3 +1,14 @@
-for _ in range(int(input())):
-    A, B = map(int, input().split(","))
-    print(A+B)
+import sys
+
+output = ""
+while 1:
+    inp = sys.stdin.readline()
+    print(inp)
+    
+    if inp != '\n':  
+        output += inp
+        continue
+    
+    break
+
+print(output)
