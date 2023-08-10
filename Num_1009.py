@@ -3,7 +3,7 @@ import sys
 input = sys.stdin.readline
 
 dic = {
-    0:[0],
+    0:[10],
     1:[1],
     2:[2,4,8,6],
     3:[3,9,7,1],

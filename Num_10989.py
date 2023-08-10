@@ -1,24 +1,16 @@
-'''
-N개의 수가 주어졌을 때, 이를 오름차순으로 정렬하는 프로그램을 작성하시오.
-10
-5
-2
-3
-1
-4
-2
-3
-5
-1
-7
-'''
-
 import sys
 
 input = sys.stdin.readline
-numList = []
 
-numList.sort()
+num = int(input())
+lst = [0 for i in range(num)]
 
-for i in numList:
-    print(i)
+for i in range(num):
+    lst[i] = int(input())
+
+for _ in range(num-1):
+    for i in range(num-1):
+        if lst[i] > lst[i+1]:
+            lst[i], lst[i+1] = lst[i+1], lst[i]
+            
+print(*lst, sep="\n")
