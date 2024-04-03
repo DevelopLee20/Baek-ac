@@ -1,19 +1,25 @@
-N = int(input())
-N_list = [i for i in input().split()]
-M = int(input())
-M_list = [i for i in input().split()]
+'''
+숫자 카드의 개수 N
+숫자 카드의 정수 1 2 3
+그 다음 M
+숫자 카드의 정수 1 2 3
+몇 개 있는지 판단
+'''
 
-dic = {}
+import sys
+from collections import Counter
 
-for i in M_list:
-    dic[i] = 0 
+input = sys.stdin.readline
 
-for i in N_list:
-    if i in dic:
-        dic[i] = dic[i] + 1
+N = input()
+N_num = [i for i in input().rstrip().split(" ")]
+M = input()
+M_num = [i for i in input().rstrip().split(" ")]
 
-output = ""
-for i in dic.values():
-    output += str(i) + " "
+count = Counter(N_num)
 
-print(output[:-1])
+for i in M_num:
+    if i in count:
+        print(count[i], end=" ")
+    else:
+        print(0, end=" ")
