@@ -1,26 +1,41 @@
+'''
+리스트를 탐색하는 것보다 딕셔너리를 탐색하는 것이 더 효율적이다.
+'''
+
 import sys
-from collections import Counter
 
 input = sys.stdin.readline
 
 N = int(input())
-NList = []
 
+SList = []
+count = {}
+SListSum = 0
 for _ in range(N):
     num = int(input())
+    SListSum += num
+    SList.append(num)
 
-    NList.append(num)
+    if num in count:
+        count[num] += 1
+    else:
+        count[num] = 0
+    
 
-# 선택정렬
-# 0 1 2 3
-# 0부터 차례로 비교 후 변경
+SList.sort()
 
-for i in range(1, N):
-    for j in range(i, 0, -1):
-        if NList[j] < NList[j-1]:
-            NList[j], NList[j-1] = NList[j-1], NList[j]
+FNumList = []
+countMax = max(count.values())
+for key, value in count.items():
+    if value == countMax:
+        FNumList.append(key)
 
-print((sum(NList) // N) + ((sum(NList) % N) != 0))
-print(NList[N // 2])
-print(Counter(NList))
-print(NList[-1] - NList[0])
+print(round(SListSum / N))
+print(SList[N // 2])
+
+if len(FNumList) == 1:
+    print(FNumList[0])
+else:
+    print(sorted(FNumList)[1])
+
+print(SList[-1] - SList[0])
