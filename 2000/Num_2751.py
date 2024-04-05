@@ -1,16 +1,13 @@
-lst = []
-count = int(input())
+N = int(input())
 
-for _ in range(count):
-    lst.append(int(input()))
-   
-# Bubble 
-for _ in range(count):
-    for j in range(1, count):
-        if lst[j-1] < lst[j]:
-            swap = lst[j-1]
-            lst[j-1] = lst[j]
-            lst[j] = swap
-            
-for i in range(count):
-    print(lst[i])
+num_list = []
+
+for _ in range(N):
+    num = int(input())
+
+    if not len(num_list):
+        num_list.append(num)
+
+    for idx, i in enumerate(num_list):
+        if i > num:
+            num_list.insert(idx, num)
