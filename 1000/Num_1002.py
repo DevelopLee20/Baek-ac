@@ -38,7 +38,7 @@ for _ in range(int(input())):
         print(-1)
     elif abs(r1-r2) == L or r1+r2 == L:
         print(1)
-    elif L < (r1+r2):
+    elif abs(r1-r2) < L < (r1+r2):
         print(2)
     else:
         print(0)

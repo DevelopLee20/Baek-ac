@@ -1,17 +1,16 @@
-lst = []
+import sys
 
-lst.append(sum(list(map(int,input().split()))))
-lst.append(sum(list(map(int,input().split()))))
-lst.append(sum(list(map(int,input().split()))))
+input = sys.stdin.readline
 
-for i in lst:
-    if i == 3:
-        print('A')
-    elif i == 2:
-        print('B')
-    elif i == 1:
-        print('C')
-    elif i == 4:
-        print('E')
+for _ in range(3):
+    result = 0
+
+    for count in range(int(input())):
+        result += int(input())
+
+    if result > 0:
+        print("+")
+    elif result < 0:
+        print("-")
     else:
-        print('D')
+        print(0)
