@@ -1,11 +1,29 @@
-'''
-행동 1: 오른쪽 한 칸 움직임 x, y+1
-행동 2: 왼쪽 아래 한 칸 움직임 x+1, y-1
-행동 3: 오른쪽 한 칸 움직임 x, y+1
-행동 4: 가능하면 오른쪽 끝 x -> 0, y+1, 안되면 왼쪽 끝 x+1, y -> 0
-아래로 가면 +8, 오른쪽으로 가면 +4
-r: int
-'''
+N, r, c = map(int, input().split())
 
-N, r, c = map(int, input().split(" "))
+x1 = 0
+y1 = 0
+x2 = 2**N
+y2 = 2**N
+output = 0
 
+for i in range(N-1, -1, -1):
+    valueX = (x2+x1) // 2
+    valueY = (y2+y1) // 2
+
+    if r < valueX and c < valueY:
+        x2 = valueX
+        y2 = valueY
+    elif r < valueX and c >= valueY:
+        output += 4**i
+        x2 = valueX
+        y1 = valueY
+    elif r >= valueX and c >= valueY:
+        output += (4**i) * 3
+        x1 = valueX
+        y1 = valueY
+    else: # x >= valueX and y < valueY
+        output += (4**i) * 2
+        x1 = valueX
+        y2 = valueY
+
+print(output)
