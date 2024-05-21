@@ -4,10 +4,18 @@ input = sys.stdin.readline
 
 N, M = map(int, input().split())
 
-NDic = {}
-for _ in range(N):
-    name = input().rstrip()
-    NDic.sort()
+listenList = set()
 
+for _ in range(N):
+    person = input().rstrip()
+    listenList.add(person)
+
+outputList = []
 for _ in range(M):
-    name = input().rstrip()
+    person = input().rstrip()
+
+    if person in listenList:
+        outputList.append(person)
+
+print(len(outputList))
+print(*sorted(outputList), sep="\n")
