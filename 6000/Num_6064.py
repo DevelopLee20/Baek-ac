@@ -18,21 +18,18 @@ for _ in range(T):
     
     lcm = (M * N) // LCM(M, N)
 
-    ableList = []
-    able = (M+x)
-    while able <= lcm:
-        ableList.append(able)
-        able += M
+    num = x - 1; notNum = True
+    while num < lcm:
+        x1 = num % M + 1
+        y1 = num % N + 1
 
-    minusOutput = True
-    output = (N+y)
-    while output <= lcm:
-        if output in ableList:
-            minusOutput = False
+        if x1 == x and y1 == y:
+            notNum = False
             break
-        output += N
+        
+        num += M
     
-    if minusOutput:
+    if notNum:
         print(-1)
     else:
-        print(output)
+        print(num+1)
