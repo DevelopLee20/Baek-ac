@@ -7,79 +7,54 @@ H: 높이
 없는 칸 -1
 M을 N 만큼 입력, H 만큼 반복
 '''
-import queue
+from collections import deque
 import sys
 input = sys.stdin.readline
 
 M, N, H = map(int, input().split())
 
-new_queue = queue.Queue()
-visited = [[[0 for m in range(M)] for n in range(N)] for h in range(H)]
-graph = [[[0 for m in range(M)] for n in range(N)] for h in range(H)]
-already = H * N * M
+graph = []
+queue = deque()
 
 for h in range(H):
+    layer = []
     for n in range(N):
         line = [int(i) for i in input().rstrip().split()]
+        layer.append(line)
+
         for m in range(M):
-            graph[h][n][m] = line[m]
-
-            if graph[h][n][m] == 1:
-                new_queue.put((h, n, m))
-                already -= 1
-
-if not already:
-    print(0)
-else:
-    count = -1
-    while new_queue.qsize():
-        now_queue = new_queue
-        new_queue = queue.Queue()
-        count += 1
-
-        while now_queue.qsize():
-            h, n, m = now_queue.get()
-            visited[h][n][m] = 1
-
-            if h+1 < H and visited[h+1][n][m] != 1:
-                if graph[h+1][n][m] == 0:
-                    new_queue.put((h+1, n, m))
-                elif graph[h+1][n][m] == -1:
-                    visited[h+1][n][m] = 1
-            if h > 0 and visited[h-1][n][m] != 1:
-                if graph[h-1][n][m] == 0:
-                    new_queue.put((h-1, n, m))
-                elif graph[h-1][n][m] == -1:
-                    visited[h-1][n][m] = 1
-            if n+1 < N and visited[h][n+1][m] != 1:
-                if graph[h][n+1][m] == 0:
-                    new_queue.put((h, n+1, m))
-                elif graph[h][n+1][m] == -1:
-                    visited[h][n+1][m] = 1
-            if n > 0 and visited[h][n-1][m] != 1:
-                if graph[h][n-1][m] == 0:
-                    new_queue.put((h, n-1, m))
-                elif graph[h][n-1][m] == -1:
-                    visited[h][n-1][m] = 1
-            if m+1 < M and visited[h][n][m+1] != 1:
-                if graph[h][n][m+1] == 0:
-                    new_queue.put((h, n, m+1))
-                elif graph[h][n][m+1] == -1:
-                    visited[h][n][m+1] = 1
-            if m > 0 and visited[h][n][m-1] != 1:
-                if graph[h][n][m-1] == 0:
-                    new_queue.put((h, n, m-1))
-                elif graph[h][n][m-1] == -1:
-                    visited[h][n][m-1] = 1
-
-    allVisited = True
-    for h in range(H):
-        for n in range(N):
-            for m in range(M):
-                if visited[h][n][m] != 1:
-                    allVisited = False
+            if line[m] == 1:
+                queue.append((h, n, m))
     
-    if allVisited:
-        print(count)
-    else:
-        print(-1)
+    graph.append(layer)
+
+# 상, 하, 좌, 우, 위칸, 아래칸
+actionH = [0, 0, 0, 0, -1, 1]
+actionN = [-1, 1, 0, 0, 0, 0]
+actionM = [0, 0, -1, 1, 0, 0]
+
+while len(queue) > 0:
+    h, n, m = queue.popleft()
+
+    for idx in range(6):
+        newH = h + actionH[idx]
+        newN = n + actionN[idx]
+        newM = m + actionM[idx]
+
+        if 0 <= newH < H and 0 <= newN < N and 0 <= newM < M and graph[newH][newN][newM] == 0:
+            graph[newH][newN][newM] = graph[h][n][m] + 1
+            queue.append((newH, newN, newM))
+
+visitMax = 0
+isEnd = True
+for h in range(H):
+    for n in range(N):
+        for m in range(M):
+            if graph[h][n][m] == 0:
+                isEnd = False
+            visitMax = max(graph[h][n][m], visitMax)
+
+if isEnd:
+    print(visitMax - 1)
+else:
+    print(-1)
