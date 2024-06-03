@@ -13,35 +13,22 @@ for t in range(T):
         key, value = input().split()
         value = int(value)
 
-        if key == 'I':
-            if value > 0:
-                heapq.heappush(heapMax, -value)
-            else:
-                heapq.heappush(heapMin, value)
+        if key == "I":
+            heapq.heappush(heapMax, -value)
+            heapq.heappush(heapMin, value)
+        # elif key == "D":
         else:
-            if value == 1:
-                if len(heapMax) > 0:
-                    heapq.heappop(heapMax)
-                elif len(heapMin) > 0:
-                    heapq.heappop(heapMin)
+            if len(heap) > 0:
+                if value == -1:
+                    heapq.heappop(heap)
+                # elif value == 1:
+                else:
+                    heap = [heapq.heappop(heap) for _ in range(len(heap))]
+                    heap.pop()
+    
+    heap = [heapq.heappop(heap) for _ in range(len(heap))]
 
-            elif value == -1:
-                if len(heapMin) > 0:
-                    heapq.heappop(heapMin)
-                elif len(heapMax) > 0:
-                    heapq.heappop(heapMax)
-
-    if len(heapMax) + len(heapMin) == 0:
+    if len(heap) == 0:
         print("EMPTY")
-    else:    
-        if len(heapMax) > 0 and len(heapMin) == 0:
-            outputMax = -heapMax[0]
-            outputMin = outputMax
-        elif len(heapMin) == 0 and len(heapMin) > 0:
-            outputMin = heapMin[0]
-            outputMax = outputMin
-        else:
-            outputMax = -heapMax[0]
-            outputMin = heapMin[0]
-
-        print(outputMax, outputMin)
+    else:
+        print(heap[-1], heap[0])
