@@ -2,14 +2,27 @@ import sys
 
 input = sys.stdin.readline
 
-vertex, node = map(int, input().split(" "))
+N, M = map(int, input().split())
+graph = [[] for x in range(N)]
+for m in range(M):
+    x, y = map(int, input().split())
+    graph[x-1].append(y-1)
+    graph[y-1].append(x-1)
 
-linked_list = [[0 for _ in range(vertex)] for __ in range(vertex)]
+visited = []
+count = 0
+for idx in range(N):
+    if idx not in visited:
+        queue = [idx]
+        visited.append(idx)
+        count += 1
 
-for _ in range(node):
-    start, end = map(int, input().split(" "))
-    linked_list[start-1][end-1] = 1
-    linked_list[end-1][start-1] = 1
+        while len(queue):
+            now = queue.pop(0)
 
-def finding(linked_list:list):
-    
+            for nxt in graph[now]:
+                if nxt not in visited:
+                    visited.append(nxt)
+                    queue.append(nxt)
+
+print(count)
