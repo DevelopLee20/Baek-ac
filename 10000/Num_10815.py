@@ -1,11 +1,15 @@
 import sys
-
 input = sys.stdin.readline
 
-have_count = int(input())
-have_card = [i for i in input().split(' ')]
-count = input()
-card = [int(i in have_card) for i in input().split(' ')]
+N = int(input())
+NList = {i for i in map(int, input().rstrip().split())}
+M = int(input())
+MList = [i for i in map(int, input().rstrip().split())]
 
-for i in card:
-    print(i, end=' ')
+for m in range(M):
+    if MList[m] in NList:
+        MList[m] = 1
+    else:
+        MList[m] = 0
+
+print(*MList)
