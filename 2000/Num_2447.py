@@ -1,15 +1,22 @@
-# 못함
+N = int(input())
 
-pattern = '''***
-* *
-***'''
+pattern = ["***", "* *", "***"]
+def maker(lst: list, n: int = 3):
+    if n == N:
+        return lst
+    
+    arr = []
+    for i in range(n):
+        arr.append(lst[i] * 3)
+    
+    for i in range(n):
+        arr.append(lst[i] + " " * n + lst[i])
 
-def pat(seed):
-    if seed == 1:
-        return
-    print(pattern*int(seed/3))
-    return pat(seed = seed/3)
+    for i in range(n):
+        arr.append(lst[i] * 3)
+    
+    return maker(arr, n * 3)
 
-pat(int(input()))
-
-print(pattern)
+pattern = maker(pattern)
+for line in pattern:
+    print(line)
