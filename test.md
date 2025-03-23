@@ -1,57 +1,47 @@
-# 백준 4375 1
+# 백준 11005 진법 변환 2
 
-링크: [4375 1](https://www.acmicpc.net/problem/4375)
+링크: [11005 진법 변환 2](https://www.acmicpc.net/problem/11005)
+
+---
 
 ## 접근 방법
 
-- 2, 5와 나누어 떨어지지 않는 수
-- 1 or 11 or 111인 n의 배수
-- 반복문을 어떻게 쓰느냐에 따라서 시간초과가 발생할 것
+- 아스키 코드를 사용해서 변환
+- A가 65 이므로 -55를 하면 10이 됨
+- 최대로 가능한 수를 계산하고, 점차 빼가면서 진법 변환
 
-## 소스 코드 1 (시간 초과)
+---
 
-소스 코드 1: [91844390 제출](https://www.acmicpc.net/source/91844390)
+## 소스 코드
 
-```python
-for _ in range(3):
-    n = int(input())
-
-    target = 1
-    length = 1
-    value = n
-    while True:
-        if value > target:
-            target = target * 10 + 1
-            length += 1
-        if value == target:
-            break
-
-        value += n
-
-    print(length)
-```
-
-## 소스 코드 2
-
-소스 코드 2: [91844941 제출](https://www.acmicpc.net/source/91844941)
+소스 코드: [91890086 제출](https://www.acmicpc.net/source/91890086)
 
 ```python
-import sys
+# 입력
+N, B = map(int, input().split())
 
-for line in sys.stdin:
-    n = int(line.strip())
+if N == 0:
+    print(N)
+    exit(0)
 
-    target = 1
-    length = 1
-    while (target % n):
-        target = target * 10 + 1
-        length += 1
+# B 진법으로 변환
+value = 1
+while value * B <= N:
+    value *= B
 
-    print(length)
+while value > 0:
+    quotient = N // value
+    N %= value
+    if quotient < 10:
+        print(quotient, end="")
+    else:
+        print(chr(quotient+55), end="")
+    value //= B
 ```
+
+---
 
 ## 결론
 
-- 의미없는 조건문을 넣어서
-- EOF를 읽는 코드를 작성하지 않았음(for _ in range(3) 처럼 코드를 작성했었다...)
-- 이렇게 애매한 문제는 EOF를 읽도록 하는 것임을 명심하자..
+- 더 빠르게 진법을 변환할 수 있는 과정을 생각해보았는데, 결국 생각해내지 못했다..
+- [61337078 제출](https://www.acmicpc.net/source/61337078) 이 코드는 1년 전에 제출했던 코드인데, 틀렸지만 이때는 성실하게 풀었던 것 같다..
