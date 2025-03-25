@@ -1,47 +1,43 @@
-# 백준 11005 진법 변환 2
+# 백준 9506 약수들의 합
 
-링크: [11005 진법 변환 2](https://www.acmicpc.net/problem/11005)
+링크: [9506 약수들의 합](https://www.acmicpc.net/problem/9506)
 
 ---
 
 ## 접근 방법
 
-- 아스키 코드를 사용해서 변환
-- A가 65 이므로 -55를 하면 10이 됨
-- 최대로 가능한 수를 계산하고, 점차 빼가면서 진법 변환
+- 약수는 n의 절반 값까지 반복해서 찾으면 된다.
+- 모든 약수를 찾고 리스트로 변환 후 출력해서 처리
 
 ---
 
 ## 소스 코드
 
-소스 코드: [91890086 제출](https://www.acmicpc.net/source/91890086)
+소스 코드: [91980463 제출](https://www.acmicpc.net/source/91980463)
 
 ```python
-# 입력
-N, B = map(int, input().split())
+while True:
+    n = int(input())
 
-if N == 0:
-    print(N)
-    exit(0)
+    if n == -1:
+        break
 
-# B 진법으로 변환
-value = 1
-while value * B <= N:
-    value *= B
+    divisor_list = []
+    for i in range(1, n//2+1):
+        if n % i == 0:
+            divisor_list.append(i)
 
-while value > 0:
-    quotient = N // value
-    N %= value
-    if quotient < 10:
-        print(quotient, end="")
+    # print("[debug]", divisor_list)
+    if sum(divisor_list) == n:
+        print(f"{n} = ", end="")
+        print(*divisor_list, sep=" + ")
     else:
-        print(chr(quotient+55), end="")
-    value //= B
+        print(f"{n} is NOT perfect.")
 ```
 
 ---
 
 ## 결론
 
-- 더 빠르게 진법을 변환할 수 있는 과정을 생각해보았는데, 결국 생각해내지 못했다..
-- [61337078 제출](https://www.acmicpc.net/source/61337078) 이 코드는 1년 전에 제출했던 코드인데, 틀렸지만 이때는 성실하게 풀었던 것 같다..
+- 소수를 찾는 방법 중 n**0.5+1 까지 반복하는 것이 있던 것 같은데, 그것과 헷갈려서 알고리즘을 수정하는 과정에서 시간이 조금 소비 되었다.
+- 단정지어서 알고리즘을 생각하지 말고, 가능성을 열어두고 프로그래밍을 시작해야 할 것 같다.
