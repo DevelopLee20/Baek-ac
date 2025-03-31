@@ -1,30 +1,56 @@
-# 백준 25305 커트라인
+# 백준 1269 대칭 차집합
 
-링크: [25305 커트라인](https://www.acmicpc.net/problem/25305)
+링크: [1269 대칭 차집합](https://www.acmicpc.net/problem/1269)
 
 ---
 
 ## 접근 방법
 
-- 리스트를 받아서 정렬 후 k 번째 점수를 출력
+- (시간초과) 중복된 값을 제거하고 남은 원소의 개수를 센다.
 
 ---
 
-## 소스 코드
+## 소스 코드 1 (시간초과)
 
-소스 코드: [92263137 제출](https://www.acmicpc.net/source/92263137)
+소스 코드: [92324784 제출](https://www.acmicpc.net/source/92324784)
 
 ```python
-N, k = map(int, input().split())
-score_list = [int(i) for i in input().split()]
+# 입력
+A_num, B_num = map(int, input().split())
+A = [int(i) for i in input().split()]
+B = [int(i) for i in input().split()]
 
-target_score = sorted(score_list, reverse=True)[k-1]
-print(target_score)
+# 중복된 값 제외
+duplicate_count = 0
+for a in A:
+    if a in B:
+        duplicate_count += 2
+
+print(A_num+B_num-duplicate_count)
 ```
+
+- for 문으로 반복하면서 list 특성상 O(n)의 탐색이 소요되어 시간초과가 발생되는 것으로 추측
+- for 문을 사용하지 않는 것으로 결정
+
+## 소스 코드 2
+
+소스 코드: [92325102 제출](https://www.acmicpc.net/source/92325102)
+
+```python
+# 입력
+A_num, B_num = map(int, input().split())
+A = [int(i) for i in input().split()]
+B = [int(i) for i in input().split()]
+
+# 중복된 값 제외
+output = len(set(A) - set(B)) + len(set(B) - set(A))
+print(output)
+```
+
+- 간단하게 set() 함수를 사용하여 구현
 
 ---
 
 ## 결론
 
-- 이 문제의 난이도는 매우 쉬우므로 최대한 빠르게 코드를 작성하는 것을 목표로 하였다.
-- 최근 sorted() 가 오름차순으로 정렬한다는 것을 알고 있었기에 reverse 옵션을 사용하여 내림차순으로 정렬해 빠르게 풀었다.
+- 위 방식 말고도 list가 아닌 dict을 사용하여 탐색시간을 줄이는 방법이 있을 것 같다.
