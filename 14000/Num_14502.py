@@ -1,22 +1,10 @@
-# 백준 14502 연구소(골드 4)
-
-링크: [14502 연구소](https://www.acmicpc.net/problem/14502)
-
----
-
-## 접근 방법
-
-- 3개의 벽 세우기, 전염, 최종 개수 세기 반복
-- bfs 또는 dfs로 완전 탐색
-- 완전 탐색 근거: 시간 제한 2초, M의 최대값이 낮게 정해져 있음
-
----
-
-## 소스 코드
-
-소스 코드: [93042857 제출](https://www.acmicpc.net/source/93042857)
-
-```python
+'''
+1. 3개의 벽 세우기
+2. 전염
+3. 최종 개수 세기
+4. 개수의 최대값 구하기
+- 완전 탐색 근거: 시간 제한이 2초, M의 최대값이 정해져 있음
+'''
 import sys
 from copy import deepcopy
 from itertools import combinations
@@ -76,47 +64,3 @@ for combine in combinations_list:
 
 # 최대 0 개수 반환
 print(max_count)
-```
-
----
-
-## 코드 개선 사항
-
-### 1. iterable 한 객체의 list 변환
-
-```python
-for n, m in list(combine):
-```
-
-```python
-for n, m in combine:
-```
-
-### 2. 0의 개수 세기 간단하게 변경
-
-```python
-# 0의 개수 세기
-count = 0
-for mline in graph:
-    count += mline.count(0)
-```
-
-```python
-count = sum(row.count(0) for row in graph)
-```
-
-### (선택) 3. 때에 따라서 캄프리헨스로 깊은 복사
-
-```python
-graph = [row[:] for row in common_graph]
-```
-
-- 2차원 이상일 경우 문제가 발생할 수 있어 선택적으로 사용한다.
-- deepcopy는 리스트 캄프리헨스보다 간단하다.
-
----
-
-## 결론
-
-- 문제를 읽고 완전 탐색을 구분하는 능력을 익히는 중인데, 이번엔 내 예상이 적중해서 기쁘다 ㅎ
-- 리스트 캄프리헨스로 깊은 복사가 가능한 사실을 처음 알았다.
