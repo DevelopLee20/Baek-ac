@@ -1,122 +1,71 @@
-# 백준 14502 연구소(골드 4)
+# 백준 1753 최단경로(골드 4)
 
-링크: [14502 연구소](https://www.acmicpc.net/problem/14502)
+링크: [1753 최단경로](https://www.acmicpc.net/problem/1753)
 
 ---
 
 ## 접근 방법
 
-- 3개의 벽 세우기, 전염, 최종 개수 세기 반복
-- bfs 또는 dfs로 완전 탐색
-- 완전 탐색 근거: 시간 제한 2초, M의 최대값이 낮게 정해져 있음
+- 최단거리를 사용하는 알고리즘 사용
+- (AI 도움) 다엑스트라 사용
+- 다엑스트라는 가중치가 양수일 때 사용 가능
+- 최단거리를 찾는 것이기 때문에 사용 가능
 
 ---
 
 ## 소스 코드
 
-소스 코드: [93042857 제출](https://www.acmicpc.net/source/93042857)
+소스 코드: [93152585 제출](https://www.acmicpc.net/source/93152585)
 
 ```python
 import sys
-from copy import deepcopy
-from itertools import combinations
-from collections import deque
-
-input = sys.stdin.readline
+import heapq
 
 # 입력
-N, M = map(int, input().split())
+input = sys.stdin.readline
 
-# 리스트 선언
-common_graph = []       # 공통으로 사용될 그래프
-common_virus_list = []  # 공통으로 사용될 초기 바이러스 위치
-empty_list = []         # 빈 공간(벽 세울 공간)
-for n in range(N):
-    ms = [int(i) for i in input().split()]
-    for idx, m in enumerate(ms):
-        coordinate = (n, idx)
-        if m == 2:
-            common_virus_list.append(coordinate)
-        elif m == 0:
-            empty_list.append(coordinate)
+V, E = map(int, input().split())
+K = int(input())
 
-    common_graph.append(ms)
+# 그래프 입력
+INF = float('inf')
+graph = [[] for _ in range(V)]
+for e in range(E):
+    u, v, w = map(int, input().split())
+    graph[u-1].append((v-1, w))
 
-# 이동 가능 방법 4가지(상하좌우)
-delta_n_list = [-1, 1, 0, 0]
-delta_m_list = [0, 0, -1, 1]
+# 다엑스트라 알고리즘으로 최단거리 파악
+distance = [INF] * V
+distance[K-1] = 0
 
-# 세울 수 있는 벽의 조합을 계산
-combinations_list = combinations(empty_list, 3)
+heap = [(0, K-1)]
+while len(heap):
+    cost, vertex = heapq.heappop(heap)
 
-max_count = 0
-for combine in combinations_list:
-    queue = deque(common_virus_list)    # 초기 바이러스 가져오기
+    if distance[vertex] < cost:
+        continue
 
-    graph = deepcopy(common_graph)      # 초기 그래프 상태 가져오기
-    for n, m in list(combine):
-        graph[n][m] = 1
+    for next_vertex, weight in graph[vertex]:
+        next_cost = cost + weight
 
-    while len(queue) > 0:
-        n, m = queue.popleft()  # bfs
-        for idx in range(4):
-            new_n = n + delta_n_list[idx]
-            new_m = m + delta_m_list[idx]
-            if 0 <= new_n < N and 0 <= new_m < M:
-                if graph[new_n][new_m] == 0: # 빈땅이면
-                    graph[new_n][new_m] = 2  # 감염
-                    queue.append((new_n, new_m))
-    
-    # 0의 개수 세기
-    count = 0
-    for mline in graph:
-        count += mline.count(0)
+        if distance[next_vertex] > next_cost:
+            distance[next_vertex] = next_cost
+            heapq.heappush(heap, (next_cost, next_vertex))
 
-    max_count = max(count, max_count)
-
-# 최대 0 개수 반환
-print(max_count)
+for dis in distance:
+    if isinstance(dis, float):
+        print("INF")
+    else:
+        print(dis)
 ```
 
 ---
 
 ## 코드 개선 사항
 
-### 1. iterable 한 객체의 list 변환
-
-```python
-for n, m in list(combine):
-```
-
-```python
-for n, m in combine:
-```
-
-### 2. 0의 개수 세기 간단하게 변경
-
-```python
-# 0의 개수 세기
-count = 0
-for mline in graph:
-    count += mline.count(0)
-```
-
-```python
-count = sum(row.count(0) for row in graph)
-```
-
-### (선택) 3. 때에 따라서 캄프리헨스로 깊은 복사
-
-```python
-graph = [row[:] for row in common_graph]
-```
-
-- 2차원 이상일 경우 문제가 발생할 수 있어 선택적으로 사용한다.
-- deepcopy는 리스트 캄프리헨스보다 간단하다.
-
 ---
 
 ## 결론
 
-- 문제를 읽고 완전 탐색을 구분하는 능력을 익히는 중인데, 이번엔 내 예상이 적중해서 기쁘다 ㅎ
-- 리스트 캄프리헨스로 깊은 복사가 가능한 사실을 처음 알았다.
+- 다엑스트라 알고리즘을 학부시절 집중해서 듣지 않았다.. 후회중이다..
+- 이번 문제를 계기로 다엑스트라에 익숙해지려 한다.
