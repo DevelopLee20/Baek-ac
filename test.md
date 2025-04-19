@@ -1,93 +1,62 @@
-# 백준 15686 치킨 배달 (골드 5)
+# 백준 1629 곱셈 (실버 1)
 
-링크: [15686 치킨 배달](https://www.acmicpc.net/problem/15686)
+링크: [1629 곱셈](https://www.acmicpc.net/problem/1629)
 
 ---
 
 ## 접근 방법
 
-- 각 집마다 치킨 집의 위치와 거리를 오름차순으로 저장
-- 가능한 치킨집 조합을 계산
-- 치킨집 조합과 위치가 동일한지 판단 후 오름차순 하나씩 탐색
+- (시간 초과) 반복문으로 계산하고 그 중간 과정에 C로 나눔
+- (정답) 분할 정복으로 지수를 나눠서 계산
 
 ---
 
 ## 소스 코드
 
-소스 코드: [93340693 제출](https://www.acmicpc.net/source/93340693)
+소스 코드: [93356067 제출](https://www.acmicpc.net/source/93356067)
 
 ```python
-import sys
-from itertools import combinations
+A, B, C = map(int, input().split())
+# print(pow(A, B, C)) 정답
 
-# 입력
-input = sys.stdin.readline
-N, M = map(int, input().split())
-graph = []
-chicken_site = []
-house_site = []
-for n in range(N):
-    line = list(map(int, input().split()))
-
-    for idx, val in enumerate(line):
-        if val == 2: # 치킨집 위치 저장
-            chicken_site.append((n, idx))
-
-        elif val == 1: # 집 위치 저장
-            house_site.append((n, idx))
-    graph.append(line)
-
-# 모든 치킨 거리 계산
-city_chicken_length = []
-for hx, hy in house_site:
+def divide(A: int, B: int) -> int:
+    if B == 0:
+        return 1
+    half = divide(A, B//2)
+    if B % 2 == 0:
+        return (half * half) % C
+    else:
+        return (half * half * A) % C
     
-    chicken_length = []
-    for cx, cy in chicken_site:
-        length = abs(hx-cx) + abs(hy - cy)
-        chicken_length.append((cx, cy, length))
-    
-    city_chicken_length.append(sorted(chicken_length, key=lambda x: x[2]))
-
-# 치킨집 조합 계산
-min_length = float('inf')
-for chicken_combinate in combinations(chicken_site, M):
-    value = 0
-    for house_chicken_length in city_chicken_length:
-        for x, y, length in house_chicken_length:
-            if (x, y) in chicken_combinate:
-                value += length
-                break
-    min_length = min(min_length, value)
-
-print(min_length)
+print(divide(A, B))
 ```
+
+|A|B|C|return|
+|---|---|---|---|
+|10|11|12||
+|'''|5|'''||
+|'''|2|'''||
+|'''|1|'''||
+|'''|0|'''|1|
+|'''|1|'''|10|
+|'''|2|'''|4|
+|'''|5|'''|4|
+|'''|11|'''|4|
+|최종값|||4|
+
+- 솔직히 감이 잘 오지 않아서 비공개 처리했다..
 
 ---
 
 ## 코드 개선 사항(GPT 4o)
 
 ```python
-# 치킨집 조합 계산
-min_length = float('inf')
-for chicken_combinate in combinations(chicken_site, M):
-    value = 0
-    for house_chicken_length in city_chicken_length:
-        for x, y, length in house_chicken_length:
-            if (x, y) in set(chicken_combinate):
-                value += length
-                break
-    min_length = min(min_length, value)
-
-print(min_length)
 ```
-
-- combinations는 list를 반환하는데, 순차 탐색을 해야될 경우 set()을 활용하여 탐색 속도를 O(n)에서 O(1)로 줄인다.
-- 그 이유는 set()은 해쉬 테이블 구조이기 때문이다.
 
 ---
 
 ## 결론
 
-- 구조물을 통과할 수 없는 줄 알고 2시간 가량 시간초과를 잡는데 시간을 소모했다..
-- 구조물 없이 거리만을 계산하는 것을 맨해튼 거리라고 한다.
-- 후... 역시 2시간은 힘들다..
+- 분할 정복 문제를 마주칠 때마다 감이 전혀 안잡힌다.
+- 그리고 분할 정복을 써야하는 이유를 들었을 때도 오... 음.. 그런가.. 싶다.. ㅋㅋ
+- 분할 정복 문제가 귀했는데, 문제 복잡도가 낮았어서 쉽게 날린 것 같아 아쉽다 ㅠ
