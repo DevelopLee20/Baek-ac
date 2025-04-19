@@ -1,29 +1,38 @@
 import sys
+from itertools import combinations
 
-# 입력
-N = int(sys.stdin.readline())
-graph = [[int(i) for i in sys.stdin.readline().rstrip().split()] for _ in range(N)]
+input = sys.stdin.readline
 
-# 능력치 합산
-for i in range(N-1):
-    for j in range(i+1, N):
-        graph[i][j] += graph[j][i]
+# N 입력
+N = int(input())
 
-print(graph) # debug
+# 선수 능력치 입력
+graph = []
+for _ in range(N):
+    row = [int(i) for i in input().split()]
+    graph.append(row)
 
-# 초깃값 설정
-visited = [False] * N
-visited_team = []
-min_abs = 101
+# combinations 함수로 팀 편성
+team_comb = list(combinations(range(N), N//2))
 
-# dfs 알고리즘
-def dfs(depth: int, next_player: int, value: int):
-    if depth == N//2: # 팀원 매칭이 되었을 때
-        for bol in visited:
-            
-        return
-    
-    visited[next_player] = True
-    dfs(depth+1, 1, value+visited[next_player])
-        visited[next_player] = False
+# 출력할 최소 차이
+min_score = 2001
 
+# 팀에 맞게 점수 계산
+for teamA in team_comb[:len(team_comb) // 2]:
+    teamA = set(teamA)
+    scoreA = 0; scoreB = 0
+    for i in range(N):
+        isA = False
+        if i in teamA:
+            isA = True
+
+        for j in range(i+1, N):
+            if isA and j in teamA:
+                scoreA += graph[i][j] + graph[j][i]
+            elif not isA and j not in teamA:
+                scoreB += graph[i][j] + graph[j][i]
+
+    min_score = min(min_score, abs(scoreA - scoreB))
+
+print(min_score)
