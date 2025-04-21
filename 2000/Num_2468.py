@@ -1,22 +1,3 @@
-# 백준 2468 안전 영역 (실버 1)
-
-링크: [2468 안전 영역](https://www.acmicpc.net/problem/2468)
-
----
-
-## 접근 방법
-
-- 높이 1부터 가장 높은 부분 전까지 반복
-- dfs로 풀이
-- 최악 N, N^2 이므로 dfs 사용 가능함
-
----
-
-## 소스 코드
-
-소스 코드: [93413770 제출](https://www.acmicpc.net/source/93413770)
-
-```python
 import sys
 
 # 입력
@@ -64,36 +45,3 @@ for height in range(1, max_height):
     max_safe_area = max(max_safe_area, safe_area)
 
 print(max_safe_area)
-```
-
----
-
-## 코드 개선 사항(GPT 4o)
-
-```python
-# 전
-while len(queue) > 0:
-
-# 후
-while queue: 
-```
-
-- queue는 iterable 하기 때문에 해당 방식으로 구현해도 문제 없음
-
-```python
-# 전
-for i in range(len(delta_x)):
-
-# 후
-for dx, dy in zip(delta_x, delta_y):
-```
-
-- 이게 더 직관적인 것 같다.
-- len() 함수도 사용하지 않아도 되고, 값을 그대로 사용하기 때문에 코드 오타 문제도 적어질 것으로 예상
-
----
-
-## 결론
-
-- 문제를 푸는데, 어려움은 없었다.
-- 하지만 GPT가 더 범용적인 코드를 사용하게 좋다는 조언을 했는데, 문제에 맞춘 코드보다 어느 코드에서나 쓰일 수 있게 작성하는게 확실히 좋아보인다.
