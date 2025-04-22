@@ -1,69 +1,42 @@
-# 백준 2468 안전 영역 (실버 1)
+# 백준 11660 구간 합 구하기 5 (실버 1)
 
-링크: [2468 안전 영역](https://www.acmicpc.net/problem/2468)
+링크: [11660 구간 합 구하기 5](https://www.acmicpc.net/problem/11660)
 
 ---
 
 ## 접근 방법
 
-- 높이 1부터 가장 높은 부분 전까지 반복
-- dfs로 풀이
-- 최악 N, N^2 이므로 dfs 사용 가능함
+- 같은 값을 M번 계산할 수 있으므로 dfs bfs는 사용불가
+- sum 연산을 하는 것은 속도가 느릴 것
+- 특정 범위의 값을 미리 계산해두고 꺼내쓰기
 
 ---
 
 ## 소스 코드
 
-소스 코드: [93413770 제출](https://www.acmicpc.net/source/93413770)
+소스 코드: [제출한 정답 소스 코드](https://www.acmicpc.net/source/93452912)
 
 ```python
 import sys
 
-# 입력
+# 표준입출력 방식 변경
 input = sys.stdin.readline
-N = int(input())
-graph = []
-max_height = 0
-for _ in range(N):
-    line = [int(i) for i in input().split()]
-    graph.append(line)
-    
-    max_height = max(max(line), max_height) # 최대 높이 구하기
 
-# dfs
-delta_x = [1, -1, 0, 0]
-delta_y = [0, 0, 1, -1]
-def dfs(visited: set, height: int, start_x: int, start_y: int):
-    queue = [(start_x, start_y)]
-    visited.add((start_x, start_y))
+# 입력
+N, M = map(int, input().split())
+graph = [[int(i) for i in input().split()] for _ in range(N)]
 
-    while len(queue) > 0:
-        x, y = queue.pop()
+# 구간 합 방식으로 계산
+prefix = [[0] * (N+1) for _ in range(N+1)]
+for row in range(1, N+1):
+    for col in range(1, N+1):
+        # 왼쪽과 위 값을 더한 후 중복된 부분을 빼기
+        prefix[row][col] = graph[row-1][col-1] + prefix[row-1][col] + prefix[row][col-1] - prefix[row-1][col-1]
 
-        for i in range(len(delta_x)):
-            new_x = x + delta_x[i]
-            new_y = y + delta_y[i]
-
-            if 0 <= new_x < N and 0 <= new_y < N:
-                if (new_x, new_y) not in visited and graph[new_x][new_y] > height:
-                    visited.add((new_x, new_y))
-                    queue.append((new_x, new_y))
-
-# 높이와 지점 설정
-max_safe_area = 1
-for height in range(1, max_height):
-    visited = set()
-    safe_area = 0
-
-    for x in range(N):
-        for y in range(N):
-            if graph[x][y] > height and (x, y) not in visited:
-                dfs(visited, height, x, y)
-                safe_area += 1
-
-    max_safe_area = max(max_safe_area, safe_area)
-
-print(max_safe_area)
+for _ in range(M):
+    x1, y1, x2, y2 = map(int, input().split())
+    result = prefix[x2][y2] - prefix[x2][y1-1] - prefix[x1-1][y2] + prefix[x1-1][y1-1]
+    print(result)
 ```
 
 ---
@@ -72,28 +45,17 @@ print(max_safe_area)
 
 ```python
 # 전
-while len(queue) > 0:
+graph = [[int(i) for i in input().split()] for _ in range(N)]
 
 # 후
-while queue: 
+graph = [list(map(int, input().split())) for _ in range(N)]
 ```
 
-- queue는 iterable 하기 때문에 해당 방식으로 구현해도 문제 없음
-
-```python
-# 전
-for i in range(len(delta_x)):
-
-# 후
-for dx, dy in zip(delta_x, delta_y):
-```
-
-- 이게 더 직관적인 것 같다.
-- len() 함수도 사용하지 않아도 되고, 값을 그대로 사용하기 때문에 코드 오타 문제도 적어질 것으로 예상
+- 리스트를 작성할 때 map이 좀 더 빠르다고 합니다.
 
 ---
 
 ## 결론
 
-- 문제를 푸는데, 어려움은 없었다.
-- 하지만 GPT가 더 범용적인 코드를 사용하게 좋다는 조언을 했는데, 문제에 맞춘 코드보다 어느 코드에서나 쓰일 수 있게 작성하는게 확실히 좋아보인다.
+- 나름 문제를 분석하는 시간을 많이 가지고 시작해서 나름 쉽게 문제를 푼 것 같은데 분할정복으로 헷갈려서 바로 못풀었다.
+- 아쉽다..
