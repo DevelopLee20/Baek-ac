@@ -1,3 +1,4 @@
 n = int(input())
-print(sum([i for i in range(7)]))
+
+print(n * (n-1) // 2)
 print(2)
