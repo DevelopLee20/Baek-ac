@@ -1,39 +1,59 @@
-# 백준 9465 스티커 (실버 1)
+# 백준 7562 나이트의 이동 (실버 1)
 
-링크: [9465 스티커](https://www.acmicpc.net/problem/9465)
+링크: [7562 나이트의 이동](https://www.acmicpc.net/problem/7562)
 
 ---
 
 ## 접근 방법
 
-- 위 또는 아래 또는 선택하지 않음을 선택하고 다음 칸으로 넘어간다고 생각하면 dp로 풀 수 있을 것 같음
+- dp로 모든 내용을 기록해가면서 가장 짧은 거리를 찾기
+  - 해당 내용은 과정상 시간 초과가 발생할 것으로 예상
+- (힌트) bfs로 최단 거리를 파악하여 해결
 
 ---
 
 ## 소스 코드
 
-소스 코드: [dp 풀이 정답 소스 코드](https://www.acmicpc.net/source/93667017)
+소스 코드: [BFS 소스 코드](https://www.acmicpc.net/source/93875697)
 
 ```python
-import sys
-
-input = sys.stdin.readline
+from collections import deque
 
 T = int(input())
-for t in range(T):
-    n = int(input())
 
-    score = []
-    for _ in range(2):
-        score.append(list(map(int, input().split())))
+delta_x = [2, 2, 1, -1, -2, -2, 1, -1]
+delta_y = [1, -1, 2, 2, 1, -1, -2, -2]
 
-    dp = [[0 for _ in range(n+1)] for _ in range(2)]
-
-    for i in range(1, n+1):
-        dp[0][i] = max(dp[1][i-1] + score[0][i-1], dp[0][i-1])
-        dp[1][i] = max(dp[0][i-1] + score[1][i-1], dp[1][i-1])
+def bfs_loop() -> int:
+    L = int(input())
     
-    print(max(dp[0][n], dp[1][n]))
+    x1, y1 = map(int, input().split())
+    x2, y2 = map(int, input().split())
+
+    if x1 == x2 and y1 == y2:
+        return 0
+
+    graph = [[-1] * L for _ in range(L)]
+    queue = deque()
+    queue.append((x1, y1))
+    graph[x1][y1] = 0
+
+    while queue:
+        x, y = queue.popleft()
+
+        for dx, dy in zip(delta_x, delta_y):
+            new_x = x + dx
+            new_y = y + dy
+
+            if 0 <= new_x < L and 0 <= new_y < L:
+                if new_x == x2 and new_y == y2:
+                    return graph[x][y] + 1
+                elif graph[new_x][new_y] == -1:
+                    graph[new_x][new_y] = graph[x][y] + 1
+                    queue.append((new_x, new_y))
+
+for t in range(T):
+    print(bfs_loop())
 ```
 
 ---
@@ -42,37 +62,31 @@ for t in range(T):
 
 ```python
 # 전
-dp = [[0 for _ in range(n+1)] for _ in range(2)]
+delta_x = [2, 2, 1, -1, -2, -2, 1, -1]
+delta_y = [1, -1, 2, 2, 1, -1, -2, -2]
 
 # 후
-dp = [[0 for _ in range(n)] for _ in range(2)]
+directions = [
+        (2, 1), (2, -1), (1, 2), (-1, 2),
+        (-2, 1), (-2, -1), (1, -2), (-1, -2)
+    ]
 ```
 
-- 배열 크기를 n+1로 할 필요 없음(이전에 작성하던 문제풀이 방식을 이어 생각하다보니 헷갈린듯)
-
----
+- 리스트로 관리하는 것보다 튜플로 묶어서 관리하는 것이 용이함
 
 ```python
 # 전
-score = []
-for _ in range(2):
-    score.append(list(map(int, input().split())))
+graph = [[-1] * L for _ in range(L)]
 
 # 후
-score = [list(map(int, input().split())) for _ in range(2)]
+visited = [[False] * L for _ in range(L)]
+queue = deque([(start[0], start[1], 0)])  # (x, y, moves)
+visited[start[0]][start[1]] = True
 ```
 
-- 더 직관적이고 깔끔하게 코드 바꾸기
-- 사실 이 방법을 생각하다가 구현하지 못해서 사용하지 못한 방식
-
-```python
-dp = [[0] * n for _ in range(2)]
-```
-
-- 이 방식도 가능하다.
+- 나는 graph 변수에 visited와 횟수를 동시에 저장했지만, 그러지 말고 구분해서 명확히 하는 것이 더 직관적임
+- 특히 queue 튜플에 변수를 하나 더 넣어서 이동 횟수를 저장하는 것을 추천
 
 ## 결론
 
-- dp 인 것을 바로 알아차렸고, 문제를 쉽게 풀 수 있었다.
-- 이 문제는 슬라이싱 윈도우 방식으로도 풀 수 있어서 dp 리스트를 사용하지 않고도 풀 수 있다.
-- 계속 이상함을 느낀 부분이 바로 이부분 이었는 듯
+- 처음 문제를 풀기 전 키보드를 치워두고 노트와 펜만으로 어떻게 접근해야할지 결정하고 시작하는데, 이 과정에서 시간을 너무 소비한 것 같고, 간단한 BFS 문제인지 파악하지 못해서 아쉽게 느껴지는 문제였다.
