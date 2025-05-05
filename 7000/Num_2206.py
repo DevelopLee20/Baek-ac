@@ -1,21 +1,3 @@
-# 백준 2206 벽 부수고 이동하기 (골드 3)
-
-링크: [2206 벽 부수고 이동하기](https://www.acmicpc.net/problem/2206)
-
----
-
-## 접근 방법
-
-- 최단거리 이므로 bfs 알고리즘 사용한다.
-- deque의 popleft()를 활용한다.
-
----
-
-## 소스 코드
-
-소스 코드: [BFS 소스 코드](https://www.acmicpc.net/source/93930948)
-
-```python
 import sys
 from collections import deque
 
@@ -52,18 +34,3 @@ while queue:
                 visited[new_x][new_y][1] = True         # 방문처리
                 queue.append((new_x, new_y, move+1, 1)) # 이동, 부순 동선으로 처리
 print(-1)
-```
-
----
-
-## 코드 개선 사항(GPT 4o)
-
-```python
-```
-
-- 없다.
-
-## 결론
-
-- 내 코드가 틀렸을 때, 다른 방식이 왜 맞고 내 것이 왜 틀렸는지 명확하게 이해되지 않을 때가 있다.
-- 시간 단축을 위해 빠르게 이해하는 센스가 중요할 것 같다.
