@@ -1,20 +1,3 @@
-# 백준 14503 로봇 청소기 (골드 5)
-
-링크: [14503 로봇 청소기](https://www.acmicpc.net/problem/14503)
-
----
-
-## 접근 방법
-
-- 복잡하므로 시뮬레이션처럼 원하는 조건을 모두 구현한다.
-
----
-
-## 소스 코드
-
-소스 코드: [시뮬레이션 소스 코드](https://www.acmicpc.net/source/93970176)
-
-```python
 import sys
 
 # 입력
@@ -53,25 +36,3 @@ def simulate(r: int, c: int, d: int) -> int:
             r, c = new_x, new_y
 
 print(simulate(r, c, d))
-```
-
----
-
-## 코드 개선 사항(GPT 4o)
-
-```python
-# 전
-if graph[r][c] == 0 and (r, c) not in clean_set:
-    clean_set.add((r, c))
-
-# 후
-if graph[r][c] == 0:
-    graph[r][c] = 2  # 청소 완료 표시
-    count += 1
-```
-
-- set()을 따로 사용하지 않고, 청소 완료 표시를 2 같은 다른 숫자로 표현한다.
-
-## 결론
-
-- 역방향으로 방향을 회전할 때 계산식이 헷갈렸는데, 오늘 제대로 이해하고 가는 것 같아 좋다.
