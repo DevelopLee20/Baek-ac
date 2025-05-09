@@ -1,58 +1,48 @@
-# 백준 14503 로봇 청소기 (골드 5)
+# 백준 1992 쿼드트리 (실버 1)
 
-링크: [14503 로봇 청소기](https://www.acmicpc.net/problem/14503)
+링크: [1992 쿼드트리](https://www.acmicpc.net/problem/1992)
 
 ---
 
 ## 접근 방법
 
-- 복잡하므로 시뮬레이션처럼 원하는 조건을 모두 구현한다.
+- 4사분면 얘기가 나오는 걸 보니 분할정복 베이스의 시뮬레이션이다.
 
 ---
 
 ## 소스 코드
 
-소스 코드: [시뮬레이션 소스 코드](https://www.acmicpc.net/source/93970176)
+소스 코드: [분할정복 소스 코드](https://www.acmicpc.net/source/94102277)
 
 ```python
 import sys
 
-# 입력
-N, M = map(int, sys.stdin.readline().split())
-r, c, d = map(int, sys.stdin.readline().split())
-graph = [list(map(int, sys.stdin.readline().split())) for _ in range(N)]
+N = int(sys.stdin.readline())
+graph = [[i for i in sys.stdin.readline().strip()] for _ in range(N)]
 
-# 시뮬레이션
-def simulate(r: int, c: int, d: int) -> int:
-    action = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-    clean_set = set()
+def is_same(x1: int, x2: int, y1: int, y2: int) -> bool:
+    for x in range(x1, x2):
+        for y in range(y1, y2):
+            if graph[x][y] != graph[x1][y1]:
+                return False
+    
+    return True
 
-    while True:
-        if graph[r][c] == 0 and (r, c) not in clean_set:
-            clean_set.add((r, c))
-
-        is_clean = False # 청소 했음
-
-        for _ in range(4):
-            d = (d + 3) % 4
-            new_x = r + action[d][0]
-            new_y = c + action[d][1]
-
-            if (0 <= new_x < N and 0 <= new_y < M) and (new_x, new_y) not in clean_set and graph[new_x][new_y] == 0:
-                r, c = new_x, new_y
-                is_clean = True
-                break
+def divide(x1: int, x2: int, y1: int, y2: int) -> str:
+    if is_same(x1, x2, y1, y2):
+        return graph[x1][y1]
+    else:
+        mid_x = (x1 + x2) // 2
+        mid_y = (y1 + y2) // 2
         
-        if not is_clean:
-            new_x = r + action[(d+2) % 4][0]
-            new_y = c + action[(d+2) % 4][1]
+        v1 = divide(x1, mid_x, y1, mid_y)
+        v2 = divide(x1, mid_x, mid_y, y2)
+        v3 = divide(mid_x, x2, y1, mid_y)
+        v4 = divide(mid_x, x2, mid_y, y2)
+        
+        return "(" + v1 + v2 + v3 + v4 + ")"
 
-            if graph[new_x][new_y] == 1:
-                return len(clean_set)
-
-            r, c = new_x, new_y
-
-print(simulate(r, c, d))
+print(divide(0, N, 0, N))
 ```
 
 ---
@@ -61,17 +51,37 @@ print(simulate(r, c, d))
 
 ```python
 # 전
-if graph[r][c] == 0 and (r, c) not in clean_set:
-    clean_set.add((r, c))
+graph = [[i for i in sys.stdin.readline().strip()] for _ in range(N)]
 
 # 후
-if graph[r][c] == 0:
-    graph[r][c] = 2  # 청소 완료 표시
-    count += 1
+graph = [list(sys.stdin.readline().strip()) for _ in range(N)]
 ```
 
-- set()을 따로 사용하지 않고, 청소 완료 표시를 2 같은 다른 숫자로 표현한다.
+- 더 간결하게 구현하기
+
+```python
+# 전
+v1 = divide(x1, mid_x, y1, mid_y)
+v2 = divide(x1, mid_x, mid_y, y2)
+v3 = divide(mid_x, x2, y1, mid_y)
+v4 = divide(mid_x, x2, mid_y, y2)
+
+# 후
+v1 = divide(x1, mid_x, y1, mid_y)       # 왼쪽 위
+v2 = divide(x1, mid_x, mid_y, y2)       # 오른쪽 위
+v3 = divide(mid_x, x2, y1, mid_y)       # 왼쪽 아래
+v4 = divide(mid_x, x2, mid_y, y2)       # 오른쪽 아래
+```
+
+- 나는 4분면 순서대로 했는데, 문제가 이 순서가 맞다고 한다.. 허헣
+
+```python
+```
+
+- 추가로 누적합 아이디어도 제시되었지만, 직관적이진 않을 것 같다.
 
 ## 결론
 
-- 역방향으로 방향을 회전할 때 계산식이 헷갈렸는데, 오늘 제대로 이해하고 가는 것 같아 좋다.
+- 분할정복이란 것은 쉽게 알아내었는데, 재귀함수를 다루는데 약해서 어렵게 느껴졌다.
+- 이게 직관적으로 이해가 되지 않는걸 보니 더 자세하게 공부를 해야되지 않을까..(아님 외울까..)
+- 나는 무조건 분할을 했는데, GPT가 숫자가 다를 때만 분할 하라는 팁을 줘서 코드를 수정하는데에 많은 도움을 받은 것 같다.
