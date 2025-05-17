@@ -1,36 +1,40 @@
-# 백준 2293 동전 1 (골드 4)
+# 백준 17298 오큰수 (골드 4)
 
-링크: [2293 동전 1](https://www.acmicpc.net/problem/2293)
+링크: [17298 오큰수](https://www.acmicpc.net/problem/17298)
 
 ---
 
 ## 접근 방법
 
-- 제한 시간이 0.5초이므로 dp로 중간 과정을 저장하면서 간다.
+- 반복문으로 반복해서 풀이한다.
+- (도움) 스택을 활용해 풀이한다.
 
 ---
 
 ## 소스 코드
 
-소스 코드: [다이나믹 프로그래밍 소스 코드](https://www.acmicpc.net/source/94301422)
+소스 코드: [스택 소스 코드](https://www.acmicpc.net/source/94424169)
 
 ```python
-import sys
+# input
+N = int(input())
+A_list = list(map(int, input().split()))
 
-input = sys.stdin.readline
+# stack
+stack = []
+output = []
+for A in A_list[::-1]:
+    while stack and stack[-1] <= A:
+        stack.pop()
+    
+    if not stack:
+        output.append(-1)
+    else:
+        output.append(stack[-1])
+    
+    stack.append(A)
 
-n, k = map(int, input().split())
-n_list = []
-for _ in range(n):
-    n_list.append(int(input()))
-
-dp = [0] * (k+1)
-dp[0] = 1
-for val in n_list:
-    for i in range(val, k+1):
-        dp[i] += dp[i - val]
-
-print(dp[-1])
+print(*output[::-1], sep=" ")
 ```
 
 ---
@@ -40,9 +44,8 @@ print(dp[-1])
 ```python
 ```
 
-- 없다.
+- 인덱스를 활용하는게 더 가독성있을 수 있으며, 초깃값을 -1로 초기화 해두면 더 간편하다고 한다.
 
 ## 결론
 
-- DP라는 것을 충분히 인지하였으나, 마무리와 디테일이 부족해서 도움을 받았다 ㅜㅜ
-- 많이 아쉽다..
+- 단순 반복으로 풀이하면 당연히 안될 걸 알았지만, 역시나 실패했고, 스택인 것을 찾아서 알았지만 결국 완벽 이해를 못해서 도움을 받아 풀었다.. 아쉽다..
