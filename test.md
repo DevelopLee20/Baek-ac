@@ -1,40 +1,33 @@
-# 백준 17298 오큰수 (골드 4)
+# 백준 11052 카드 구매하기 (실버 1)
 
-링크: [17298 오큰수](https://www.acmicpc.net/problem/17298)
+링크: [11052 카드 구매하기](https://www.acmicpc.net/problem/11052)
 
 ---
 
 ## 접근 방법
 
-- 반복문으로 반복해서 풀이한다.
-- (도움) 스택을 활용해 풀이한다.
+- (틀렸습니다) 카드 팩의 평균 가격 정렬 후 구매
+- (정답) DP로 풀이
 
 ---
 
 ## 소스 코드
 
-소스 코드: [스택 소스 코드](https://www.acmicpc.net/source/94424169)
+소스 코드: [다이나믹 프로그래밍 소스 코드](https://www.acmicpc.net/source/94670772)
 
 ```python
-# input
+# 입력
 N = int(input())
-A_list = list(map(int, input().split()))
+cost_list = list(map(int, input().split()))
 
-# stack
-stack = []
-output = []
-for A in A_list[::-1]:
-    while stack and stack[-1] <= A:
-        stack.pop()
-    
-    if not stack:
-        output.append(-1)
-    else:
-        output.append(stack[-1])
-    
-    stack.append(A)
+# 다이나믹 프로그래밍 알고리즘 수행
+dp = [0] * (N+1)
 
-print(*output[::-1], sep=" ")
+for i in range(1, N+1):
+    for j in range(i):
+        dp[i] = max(dp[j] + cost_list[i-j-1], dp[i])
+
+print(dp[N])
 ```
 
 ---
@@ -44,8 +37,9 @@ print(*output[::-1], sep=" ")
 ```python
 ```
 
-- 인덱스를 활용하는게 더 가독성있을 수 있으며, 초깃값을 -1로 초기화 해두면 더 간편하다고 한다.
+- 없음
 
 ## 결론
 
-- 단순 반복으로 풀이하면 당연히 안될 걸 알았지만, 역시나 실패했고, 스택인 것을 찾아서 알았지만 결국 완벽 이해를 못해서 도움을 받아 풀었다.. 아쉽다..
+- 이게 그리디 알고리즘으로는 시간초과가 발생할 것 같은데, 논리적으로 틀린 부분은 모르겠다..
+- 요즘 GPT도 무료 버전은 조금 상태가 안좋은 듯...
