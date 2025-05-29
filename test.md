@@ -1,59 +1,57 @@
-# 백준 1916 최소비용 구하기 (골드 5)
+# 백준 11404 플로이드 (골드 4)
 
-링크: [1916 최소비용 구하기](https://www.acmicpc.net/problem/1916)
+링크: [11404 플로이드](https://www.acmicpc.net/problem/11404)
 
 ---
 
 ## 접근 방법
 
-- 양의 비용에 최단 거리 계산이므로 다익스트라 알고리즘 사용함
+- (시간초과) 비용이 양수이고, 최소 비용 구하기는 다익스트라
+- (도움) 모든 출발 지점에서의 비용을 고려해야할 땐, 플로이드-워셜 알고리즘을 사용한다.
 
 ---
 
 ## 소스 코드
 
-소스 코드: [다익스트라 소스 코드](https://www.acmicpc.net/source/94768724)
+소스 코드: [플로이드-워셜 알고리즘](https://www.acmicpc.net/source/94881618)
 
 ```python
 import sys
 import heapq
 
-# 표준 입력 오버라이딩
+# 표준 입출력 오버라이딩
 input = sys.stdin.readline
 
 # 입력
-N = int(input())
-M = int(input())
-graph = [[] for _ in range(N)]
-for m in range(M):
-    v1, v2, cost = map(int, input().split())
-    graph[v1-1].append((v2-1, cost))
-
-start, end = map(int, input().split())
-
-# 다엑스트라 알고리즘
 INF = float('inf')
-distance = [INF] * N
-distance[start-1] = 0
+n = int(input())
+m = int(input())
+graph = [[INF for _ in range(n)] for _ in range(n)]
 
-heap = [(start-1, 0)] # 최소힙
-while len(heap):
-    vertex, cost = heapq.heappop(heap)
-    
-    if distance[vertex] < cost:
-        continue
-    
-    # 현재 정점에서 가능한 다른 정점 확인
-    for next_vertex, weight in graph[vertex]:
-        next_cost = cost + weight
-        
-        # 기존의 비용보다 적을 경우 갱신
-        if distance[next_vertex] > next_cost:
-            distance[next_vertex] = next_cost
-            heapq.heappush(heap, (next_vertex, next_cost))
+# 자기자신은 0으로 초기화
+for i in range(n):
+    graph[i][i] = 0
+
+# 노선 입력
+for _ in range(m):
+    a, b, c = map(int, input().split())
+    graph[a-1][b-1] = min(graph[a-1][b-1], c) # 중복된 동선 입력 고려
+
+# 플로이드-워셜
+for k in range(n):
+    for i in range(n):
+        for j in range(n):
+            graph[i][j] = min(graph[i][j], graph[i][k] + graph[k][j])
+
+# INF는 0으로 변환
+for i in range(n):
+    for j in range(n):
+        if graph[i][j] == INF:
+            graph[i][j] = 0
 
 # 출력
-print(distance[end-1])
+for line in graph:
+    print(*line, sep=" ")
 ```
 
 ---
@@ -67,5 +65,6 @@ print(distance[end-1])
 
 ## 결론
 
-- 다익스트라는 시작 정점에서 가능한 수 중 탐욕적으로 가장 비용이 적은 수 부터 계산한다.
-- 시작 정점부터 점차 뻗어나가서 최종적으로 비용을 갱신할 수 없으면 종료 후 출력한다.
+- 다익스트라에 익숙해져서 무작정 썼다가 피봤다..
+- 플로이드-워셜 알고리즘은 모든 경우의 최소비용을 구할 때 유용하다.
+- 아이디어는 직접가는 것보다 경유해서 가는 것이 비용이 더 쌀 수 있다는 것에서 시작
